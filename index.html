@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kodi Setup</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #0f0f1a;
+      color: #eee;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .card {
+      background: #1a1a2e;
+      border-radius: 20px;
+      padding: 40px 28px;
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+    }
+    .icon { font-size: 56px; margin-bottom: 16px; }
+    h1 { font-size: 24px; color: #fff; margin-bottom: 8px; }
+    .sub { color: #888; font-size: 14px; line-height: 1.6; margin-bottom: 32px; }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      background: #e94560;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 700;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity 0.15s;
+    }
+    .btn:active { opacity: 0.8; }
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      color: #666;
+      font-size: 14px;
+      border: 1px solid #2a2a3e;
+      border-radius: 14px;
+      cursor: pointer;
+      margin-top: 12px;
+      text-decoration: none;
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      text-align: left;
+      margin-bottom: 14px;
+    }
+    .step-num {
+      background: #e94560;
+      color: #fff;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .step-text { color: #aaa; font-size: 14px; line-height: 1.5; }
+    .steps { margin-bottom: 28px; }
+    .ok {
+      background: #0d3b25;
+      border: 1px solid #1c7a45;
+      color: #4caf84;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .err {
+      background: #3b0d0d;
+      border: 1px solid #7a1c1c;
+      color: #e06060;
+      padding: 16px;
+      border-radius: 12px;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    #main-view, #success-view, #error-view { display: none; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <div class="icon">📺</div>
+
+  <!-- Main setup view -->
+  <div id="main-view">
+    <h1>Kodi Video Setup</h1>
+    <p class="sub">One tap to configure your Kodi with your personal video share.</p>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">Make sure Kodi is open on your device</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">Tap the button below</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">Kodi will open and load your videos automatically</div>
+      </div>
+    </div>
+    <a id="kodi-link" class="btn" href="#">▶&nbsp; Configure Kodi Now</a>
+    <a id="manual-link" class="btn-secondary" href="#">Open share in browser instead</a>
+  </div>
+
+  <!-- Success view -->
+  <div id="success-view">
+    <h1>All Done!</h1>
+    <div class="ok">✓ Kodi has been configured.<br>Your videos should be loading now.</div>
+    <p class="sub">You can close this page. Next time just open Kodi directly.</p>
+  </div>
+
+  <!-- Error view -->
+  <div id="error-view">
+    <h1>Something went wrong</h1>
+    <div class="err" id="err-msg">Missing share URL parameter.</div>
+    <p class="sub">Contact the person who sent you this link.</p>
+  </div>
+</div>
+
+<script>
+  var params = new URLSearchParams(window.location.search);
+  var shareUrl = params.get('url');
+
+  if (!shareUrl) {
+    document.getElementById('error-view').style.display = 'block';
+    document.getElementById('err-msg').textContent = 'No share URL found in this link. Please ask for a new setup link.';
+  } else {
+    document.getElementById('main-view').style.display = 'block';
+
+    // Build the Kodi plugin deep link
+    // This calls our addon with action=seturl and the encoded share URL
+    var encoded = encodeURIComponent(shareUrl);
+    var kodiLink = 'plugin://plugin.video.onedriveshare/?action=seturl&url=' + encoded;
+
+    document.getElementById('kodi-link').href = kodiLink;
+    document.getElementById('manual-link').href = shareUrl;
+
+    // If Kodi handled the link, show success after a short delay
+    document.getElementById('kodi-link').addEventListener('click', function() {
+      setTimeout(function() {
+        document.getElementById('main-view').style.display = 'none';
+        document.getElementById('success-view').style.display = 'block';
+      }, 2000);
+    });
+  }
+</script>
+</body>
+</html>
