@@ -4,170 +4,567 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kodi Setup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --red: #ff3355;
+      --red-dim: rgba(255,51,85,0.15);
+      --green: #00e676;
+      --green-dim: rgba(0,230,118,0.12);
+      --bg: #080810;
+      --surface: #10101e;
+      --border: rgba(255,255,255,0.07);
+      --text: #f0f0ff;
+      --muted: #6060a0;
+    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      background: #0f0f1a;
-      color: #eee;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 24px;
+      overflow-x: hidden;
     }
+
+    /* Ambient background glow */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -20%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(255,51,85,0.12) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
     .card {
-      background: #1a1a2e;
-      border-radius: 20px;
-      padding: 40px 28px;
-      max-width: 440px;
+      position: relative;
+      z-index: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px 36px 40px;
+      max-width: 480px;
       width: 100%;
-      text-align: center;
-      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06);
     }
-    .icon { font-size: 56px; margin-bottom: 16px; }
-    h1 { font-size: 24px; color: #fff; margin-bottom: 8px; }
-    .sub { color: #888; font-size: 14px; line-height: 1.6; margin-bottom: 32px; }
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 18px;
-      background: #e94560;
-      color: #fff;
-      font-size: 18px;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 32px;
+    }
+    .logo-dot {
+      width: 10px; height: 10px;
+      background: var(--red);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--red);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 12px var(--red); }
+      50% { opacity: 0.5; box-shadow: 0 0 4px var(--red); }
+    }
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
       font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #fff 40%, rgba(255,255,255,0.5));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .sub {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 36px;
+      font-weight: 300;
+    }
+
+    /* Steps */
+    .steps { margin-bottom: 32px; display: flex; flex-direction: column; gap: 0; }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeUp 0.4s ease forwards;
+    }
+    .step:last-child { border-bottom: none; }
+    .step:nth-child(1) { animation-delay: 0.1s; }
+    .step:nth-child(2) { animation-delay: 0.2s; }
+    .step:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--red);
+      background: var(--red-dim);
+      border: 1px solid rgba(255,51,85,0.2);
+      border-radius: 6px;
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .step.done .step-num {
+      background: var(--green-dim);
+      border-color: rgba(0,230,118,0.2);
+      color: var(--green);
+    }
+    .step-body { flex: 1; }
+    .step-title { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+    .step-desc { font-size: 13px; color: var(--muted); font-weight: 300; }
+
+    /* Buttons */
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--red);
+      color: #fff;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
       border: none;
       border-radius: 14px;
       cursor: pointer;
       text-decoration: none;
-      transition: opacity 0.15s;
+      transition: all 0.2s;
+      box-shadow: 0 8px 24px rgba(255,51,85,0.3);
+      margin-bottom: 10px;
     }
-    .btn:active { opacity: 0.8; }
-    .btn-secondary {
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 12px 32px rgba(255,51,85,0.4); }
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+    .btn.success {
+      background: #0d3b25;
+      border: 1px solid rgba(0,230,118,0.3);
+      color: var(--green);
+      box-shadow: none;
+    }
+    .btn-ghost {
       display: block;
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       background: transparent;
-      color: #666;
-      font-size: 14px;
-      border: 1px solid #2a2a3e;
-      border-radius: 14px;
-      cursor: pointer;
-      margin-top: 12px;
-      text-decoration: none;
-    }
-    .step {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      text-align: left;
-      margin-bottom: 14px;
-    }
-    .step-num {
-      background: #e94560;
-      color: #fff;
-      border-radius: 50%;
-      width: 26px;
-      height: 26px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      color: var(--muted);
       font-size: 13px;
-      font-weight: 700;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      transition: border-color 0.2s, color 0.2s;
+      margin-bottom: 8px;
+    }
+    .btn-ghost:hover { border-color: rgba(255,255,255,0.2); color: var(--text); }
+
+    /* Status boxes */
+    .notice {
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+    .notice.ok { background: var(--green-dim); border: 1px solid rgba(0,230,118,0.2); color: #80ffbb; }
+    .notice.err { background: rgba(255,51,85,0.1); border: 1px solid rgba(255,51,85,0.2); color: #ff8899; }
+    .notice.info { background: rgba(100,100,200,0.1); border: 1px solid rgba(100,100,200,0.2); color: #aab; }
+
+    /* Platform badge */
+    .platform-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 4px 10px;
+      margin-bottom: 24px;
+    }
+
+    /* Spinner */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
       flex-shrink: 0;
-      margin-top: 1px;
     }
-    .step-text { color: #aaa; font-size: 14px; line-height: 1.5; }
-    .steps { margin-bottom: 28px; }
-    .ok {
-      background: #0d3b25;
-      border: 1px solid #1c7a45;
-      color: #4caf84;
-      padding: 16px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 600;
-      margin-bottom: 16px;
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Views */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Progress bar */
+    .progress-wrap {
+      background: rgba(255,255,255,0.05);
+      border-radius: 4px;
+      height: 4px;
+      margin: 16px 0;
+      overflow: hidden;
     }
-    .err {
-      background: #3b0d0d;
-      border: 1px solid #7a1c1c;
-      color: #e06060;
-      padding: 16px;
-      border-radius: 12px;
-      font-size: 14px;
-      margin-bottom: 16px;
+    .progress-bar {
+      height: 100%;
+      background: var(--red);
+      border-radius: 4px;
+      width: 0%;
+      transition: width 0.4s ease;
+      box-shadow: 0 0 8px var(--red);
     }
-    #main-view, #success-view, #error-view { display: none; }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+    .small { font-size: 12px; color: var(--muted); text-align: center; margin-top: 8px; }
   </style>
 </head>
 <body>
 <div class="card">
-  <div class="icon">📺</div>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <span class="logo-text">Kodi Video Setup</span>
+  </div>
 
-  <!-- Main setup view -->
-  <div id="main-view">
-    <h1>Kodi Video Setup</h1>
-    <p class="sub">One tap to configure your Kodi with your personal video share.</p>
+  <!-- ERROR VIEW -->
+  <div id="view-error" class="view">
+    <h1>Invalid Link</h1>
+    <p class="sub">This setup link is missing the share URL. Contact the person who sent it.</p>
+    <div class="notice err" id="err-msg">No share URL found in this link.</div>
+  </div>
+
+  <!-- DETECT VIEW (brief) -->
+  <div id="view-detect" class="view">
+    <h1>Detecting your device...</h1>
+    <div class="progress-wrap"><div class="progress-bar" id="detect-bar"></div></div>
+  </div>
+
+  <!-- WINDOWS VIEW -->
+  <div id="view-windows" class="view">
+    <div class="platform-badge">🖥 Windows · Kodi detected</div>
+    <h1>Automatic Setup</h1>
+    <p class="sub">Kodi is open on your PC. Click the button and everything configures itself.</p>
+    <div id="win-steps" class="steps">
+      <div class="step" id="ws1">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Install addon</div>
+          <div class="step-desc">Downloads and installs the video plugin into Kodi</div>
+        </div>
+      </div>
+      <div class="step" id="ws2">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Configure share URL</div>
+          <div class="step-desc">Saves your personal video share into the addon</div>
+        </div>
+      </div>
+      <div class="step" id="ws3">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Open videos</div>
+          <div class="step-desc">Navigates Kodi to your video library</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn" id="win-btn" onclick="runWindowsSetup()">
+      <span>▶ Configure Kodi Automatically</span>
+    </button>
+    <div id="win-notice"></div>
+    <p class="small">Kodi must be running with HTTP control enabled on port 8080</p>
+  </div>
+
+  <!-- WINDOWS - KODI NOT DETECTED -->
+  <div id="view-windows-manual" class="view">
+    <div class="platform-badge">🖥 Windows</div>
+    <h1>Enable Kodi Remote Control</h1>
+    <p class="sub">Kodi's HTTP API needs to be enabled first (one-time setup).</p>
     <div class="steps">
       <div class="step">
         <div class="step-num">1</div>
-        <div class="step-text">Make sure Kodi is open on your device</div>
+        <div class="step-body">
+          <div class="step-title">Open Kodi Settings</div>
+          <div class="step-desc">Settings → Services → Control</div>
+        </div>
       </div>
       <div class="step">
         <div class="step-num">2</div>
-        <div class="step-text">Tap the button below</div>
+        <div class="step-body">
+          <div class="step-title">Enable "Allow remote control via HTTP"</div>
+          <div class="step-desc">Leave port as 8080, no password needed</div>
+        </div>
       </div>
       <div class="step">
         <div class="step-num">3</div>
-        <div class="step-text">Kodi will open and load your videos automatically</div>
+        <div class="step-body">
+          <div class="step-title">Come back here and click Retry</div>
+          <div class="step-desc">Setup will complete automatically</div>
+        </div>
       </div>
     </div>
-    <a id="kodi-link" class="btn" href="#">▶&nbsp; Configure Kodi Now</a>
-    <a id="manual-link" class="btn-secondary" href="#">Open share in browser instead</a>
+    <button class="btn" onclick="detectAndRoute()">↻ Retry Detection</button>
   </div>
 
-  <!-- Success view -->
-  <div id="success-view">
-    <h1>All Done!</h1>
-    <div class="ok">✓ Kodi has been configured.<br>Your videos should be loading now.</div>
-    <p class="sub">You can close this page. Next time just open Kodi directly.</p>
+  <!-- ANDROID VIEW -->
+  <div id="view-android" class="view">
+    <div class="platform-badge">📱 Android</div>
+    <h1>Quick Setup</h1>
+    <p class="sub">Two steps — install the addon, then tap to configure.</p>
+
+    <div class="steps" id="android-steps">
+      <div class="step" id="as1">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Download &amp; install the addon</div>
+          <div class="step-desc">Tap below to download, then install via Kodi → Add-ons → Install from zip</div>
+        </div>
+      </div>
+      <div class="step" id="as2">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Configure your share URL</div>
+          <div class="step-desc">Tap the second button — Kodi opens and saves your URL automatically</div>
+        </div>
+      </div>
+    </div>
+
+    <a id="android-download" class="btn" href="#" download>
+      ⬇ Download Addon
+    </a>
+    <div class="notice info" style="margin-bottom:10px">
+      After downloading: open Kodi → Add-ons → box icon (top left) → Install from zip → Downloads → select the file.<br><br>
+      <strong>Tip:</strong> If it crashes on first install, close Kodi and try installing again.
+    </div>
+    <button class="btn" id="android-configure-btn" onclick="androidConfigure()" style="margin-top:4px">
+      ▶ Configure Kodi (tap after install)
+    </button>
+    <div id="android-notice"></div>
+    <hr class="divider">
+    <a id="android-share-link" class="btn-ghost" href="#" target="_blank">Open share folder in browser</a>
   </div>
 
-  <!-- Error view -->
-  <div id="error-view">
-    <h1>Something went wrong</h1>
-    <div class="err" id="err-msg">Missing share URL parameter.</div>
-    <p class="sub">Contact the person who sent you this link.</p>
+  <!-- SUCCESS VIEW -->
+  <div id="view-success" class="view">
+    <h1>All done! 🎉</h1>
+    <div class="notice ok">✓ Kodi has been configured successfully.<br>Your videos are loading now.</div>
+    <p class="sub">Next time just open Kodi directly — no setup needed.</p>
   </div>
+
 </div>
 
 <script>
-  var params = new URLSearchParams(window.location.search);
-  var shareUrl = params.get('url');
+// ─── Config ────────────────────────────────────────────────────────────────
+// Replace this with the direct download URL of your addon zip on GitHub
+var ADDON_ZIP_URL = 'https://github.com/ghemed/kodi-setup/raw/main/plugin.video.onedriveshare.zip';
+var KODI_API     = 'http://localhost:8080/jsonrpc';
+var ADDON_ID     = 'plugin.video.onedriveshare';
 
-  if (!shareUrl) {
-    document.getElementById('error-view').style.display = 'block';
-    document.getElementById('err-msg').textContent = 'No share URL found in this link. Please ask for a new setup link.';
-  } else {
-    document.getElementById('main-view').style.display = 'block';
+// ─── Parse URL params ───────────────────────────────────────────────────────
+var params   = new URLSearchParams(window.location.search);
+var shareUrl = params.get('url');
 
-    // Build the Kodi plugin deep link
-    // This calls our addon with action=seturl and the encoded share URL
-    var encoded = encodeURIComponent(shareUrl);
-    var kodiLink = 'plugin://plugin.video.onedriveshare/?action=seturl&url=' + encoded;
+// ─── Helpers ────────────────────────────────────────────────────────────────
+function show(id) {
+  document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
 
-    document.getElementById('kodi-link').href = kodiLink;
-    document.getElementById('manual-link').href = shareUrl;
+function markStep(id, done) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('done', done);
+  el.querySelector('.step-num').textContent = done ? '✓' : el.querySelector('.step-num').textContent;
+}
 
-    // If Kodi handled the link, show success after a short delay
-    document.getElementById('kodi-link').addEventListener('click', function() {
-      setTimeout(function() {
-        document.getElementById('main-view').style.display = 'none';
-        document.getElementById('success-view').style.display = 'block';
-      }, 2000);
-    });
+function setNotice(id, type, msg) {
+  var el = document.getElementById(id);
+  el.innerHTML = '<div class="notice ' + type + '">' + msg + '</div>';
+}
+
+function isAndroid() {
+  return /android/i.test(navigator.userAgent);
+}
+
+function isWindows() {
+  return /windows/i.test(navigator.userAgent);
+}
+
+// ─── Kodi JSON-RPC helper ───────────────────────────────────────────────────
+async function kodiCall(method, params) {
+  var res = await fetch(KODI_API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: method, params: params || {} })
+  });
+  var data = await res.json();
+  if (data.error) throw new Error(data.error.message);
+  return data.result;
+}
+
+async function kodiPing() {
+  try {
+    await kodiCall('JSONRPC.Ping');
+    return true;
+  } catch(e) {
+    return false;
   }
+}
+
+// ─── Detection & routing ────────────────────────────────────────────────────
+async function detectAndRoute() {
+  if (!shareUrl) { show('view-error'); return; }
+
+  show('view-detect');
+  var bar = document.getElementById('detect-bar');
+  bar.style.width = '40%';
+
+  if (isAndroid()) {
+    bar.style.width = '100%';
+    setupAndroidView();
+    setTimeout(function(){ show('view-android'); }, 300);
+    return;
+  }
+
+  // Windows — try to reach Kodi
+  bar.style.width = '70%';
+  var kodiUp = await kodiPing();
+  bar.style.width = '100%';
+
+  setTimeout(function(){
+    if (kodiUp) {
+      show('view-windows');
+    } else {
+      show('view-windows-manual');
+    }
+  }, 300);
+}
+
+// ─── Android setup ──────────────────────────────────────────────────────────
+function setupAndroidView() {
+  document.getElementById('android-download').href = ADDON_ZIP_URL;
+  document.getElementById('android-share-link').href = shareUrl;
+}
+
+function androidConfigure() {
+  var encoded    = encodeURIComponent(shareUrl);
+  var intentUrl  = 'intent://plugin.video.onedriveshare/?action=seturl&url=' + encoded
+                 + '#Intent;scheme=plugin;package=org.xbmc.kodi;end';
+  var btn = document.getElementById('android-configure-btn');
+  btn.textContent = '⏳ Opening Kodi...';
+  window.location.href = intentUrl;
+  setTimeout(function(){
+    markStep('as2', true);
+    setNotice('android-notice', 'ok', '✓ Kodi should have opened. Your videos are loading!');
+    btn.textContent = '✓ Done';
+    btn.classList.add('success');
+  }, 2000);
+}
+
+// ─── Windows automatic setup ─────────────────────────────────────────────────
+async function runWindowsSetup() {
+  var btn = document.getElementById('win-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<div class="spinner"></div><span>Working...</span>';
+
+  try {
+    // Step 1: Install addon via Kodi's addon download
+    setNotice('win-notice', 'info', 'Step 1/3 — Installing addon...');
+    await kodiCall('Addons.ExecuteAddon', {
+      addonid: 'plugin.video.package.installer',
+      params: { url: ADDON_ZIP_URL }
+    });
+  } catch(e) {
+    // Fallback: try direct zip install via Files API
+    try {
+      await kodiCall('Addons.InstallAddon', { addonid: ADDON_ID });
+    } catch(e2) {
+      // Try using the built-in zip installer
+      try {
+        await kodiCall('GUI.ActivateWindow', {
+          window: 'addonbrowser',
+          parameters: ['install', ADDON_ZIP_URL]
+        });
+        await new Promise(function(r){ setTimeout(r, 3000); });
+      } catch(e3) { /* best effort */ }
+    }
+  }
+
+  markStep('ws1', true);
+
+  // Step 2: Set the share URL via addon settings
+  setNotice('win-notice', 'info', 'Step 2/3 — Saving your share URL...');
+  try {
+    await kodiCall('Settings.SetSettingValue', {
+      setting: ADDON_ID + '.share_url',
+      value: shareUrl
+    });
+  } catch(e) {
+    // Fallback: navigate to the addon with seturl action
+    try {
+      await kodiCall('Player.Open', {
+        item: { file: 'plugin://' + ADDON_ID + '/?action=seturl&url=' + encodeURIComponent(shareUrl) }
+      });
+      await new Promise(function(r){ setTimeout(r, 2000); });
+    } catch(e2) { /* best effort */ }
+  }
+
+  markStep('ws2', true);
+
+  // Step 3: Open the addon
+  setNotice('win-notice', 'info', 'Step 3/3 — Opening your videos...');
+  try {
+    await kodiCall('GUI.ActivateWindow', {
+      window: 'videos',
+      parameters: ['plugin://' + ADDON_ID + '/']
+    });
+  } catch(e) { /* best effort */ }
+
+  markStep('ws3', true);
+  setNotice('win-notice', 'ok', '✓ All done! Check your Kodi window.');
+  btn.innerHTML = '✓ Setup Complete';
+  btn.classList.add('success');
+  btn.disabled = false;
+}
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+detectAndRoute();
 </script>
 </body>
 </html>
