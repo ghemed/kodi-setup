@@ -5,146 +5,100 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Kodi Setup</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg:       #05050d;
-      --surface:  #0c0c1a;
-      --surface2: #121228;
-      --border:   rgba(255,255,255,0.07);
-      --red:      #e63950;
-      --red-glow: rgba(230,57,80,0.18);
-      --green:    #1de982;
-      --blue:     #3b82f6;
-      --text:     #f0f0ff;
-      --muted:    #5a5a8a;
-      --card-shadow: 0 32px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.04);
+      --bg:      #06060f;
+      --surface: #0d0d1f;
+      --s2:      #13132b;
+      --border:  rgba(255,255,255,0.07);
+      --red:     #e63950;
+      --rglow:   rgba(230,57,80,0.15);
+      --green:   #1de982;
+      --text:    #eeeeff;
+      --muted:   #55558a;
     }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Space Grotesk', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       padding: 20px;
-      /* subtle grid texture */
       background-image:
-        linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+        linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
       background-size: 40px 40px;
     }
-
-    /* Ambient glow blob */
     body::before {
       content: '';
-      position: fixed;
-      top: -15%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 700px;
-      height: 500px;
-      background: radial-gradient(ellipse at center,
-        rgba(230,57,80,0.09) 0%,
-        rgba(59,130,246,0.05) 40%,
-        transparent 70%);
+      position: fixed; top: -10%; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 500px;
+      background: radial-gradient(ellipse, rgba(230,57,80,0.08) 0%, transparent 65%);
       pointer-events: none;
     }
-
     .card {
-      position: relative;
-      z-index: 1;
+      position: relative; z-index: 1;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 24px;
-      padding: 40px 32px 36px;
-      max-width: 480px;
-      width: 100%;
-      box-shadow: var(--card-shadow);
+      padding: 36px 30px 32px;
+      max-width: 460px; width: 100%;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.04);
     }
-
-    /* ── Header ── */
     .header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 28px;
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 24px;
     }
-    .logo-mark {
-      width: 32px; height: 32px;
-      background: var(--red);
-      border-radius: 8px;
+    .logo {
+      width: 30px; height: 30px; background: var(--red); border-radius: 8px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      box-shadow: 0 0 16px var(--red-glow);
+      font-size: 15px; box-shadow: 0 0 16px var(--rglow);
     }
-    .logo-name {
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-    }
-    .platform-tag {
-      margin-left: auto;
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--muted);
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 4px 10px;
-      letter-spacing: 0.08em;
-    }
+    .logo-name { font-size: 13px; font-weight: 600; letter-spacing:.06em; color: var(--muted); }
 
     h1 {
-      font-size: 28px;
-      font-weight: 700;
-      line-height: 1.15;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, #fff 30%, rgba(255,255,255,0.45));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      font-size: 27px; font-weight: 700; line-height: 1.15; margin-bottom: 8px;
+      background: linear-gradient(135deg,#fff 30%,rgba(255,255,255,0.4));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
     }
+    .sub { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 24px; }
 
-    .sub {
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--muted);
-      line-height: 1.65;
-      margin-bottom: 28px;
+    /* ── Mode selector ── */
+    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .mode-btn {
+      background: var(--s2); border: 1.5px solid var(--border);
+      border-radius: 14px; padding: 16px 12px; cursor: pointer;
+      text-align: center; transition: border-color .2s, background .2s;
+      color: var(--text);
     }
+    .mode-btn:hover { border-color: rgba(230,57,80,.4); background: rgba(230,57,80,.05); }
+    .mode-btn.active { border-color: var(--red); background: rgba(230,57,80,.08); }
+    .mode-icon { font-size: 26px; margin-bottom: 6px; }
+    .mode-label { font-size: 13px; font-weight: 600; }
+    .mode-desc  { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
 
-    /* ── Input ── */
+    /* ── Sections ── */
+    .section { display: none; }
+    .section.active { display: block; }
+
+    /* ── Field ── */
     .field-label {
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 8px;
+      font-size: 11px; font-weight: 600; letter-spacing:.1em;
+      text-transform: uppercase; color: var(--muted); margin-bottom: 7px;
     }
     textarea, input[type=text] {
-      width: 100%;
-      padding: 13px 16px;
-      background: var(--surface2);
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      color: var(--text);
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 14px;
-      outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      margin-bottom: 10px;
+      width: 100%; padding: 12px 14px;
+      background: var(--s2); border: 1.5px solid var(--border);
+      border-radius: 11px; color: var(--text);
+      font-family: 'Space Grotesk', sans-serif; font-size: 14px;
+      outline: none; transition: border-color .2s, box-shadow .2s;
     }
-    textarea { resize: none; height: 78px; line-height: 1.5; }
+    textarea { resize: none; height: 74px; line-height: 1.5; margin-bottom: 10px; }
     textarea:focus, input[type=text]:focus {
-      border-color: rgba(230,57,80,0.5);
-      box-shadow: 0 0 0 3px rgba(230,57,80,0.08);
+      border-color: rgba(230,57,80,.5);
+      box-shadow: 0 0 0 3px rgba(230,57,80,.07);
     }
     textarea::placeholder, input::placeholder { color: var(--muted); font-style: italic; }
 
@@ -153,378 +107,236 @@
       display: flex; align-items: center; justify-content: center; gap: 8px;
       width: 100%; padding: 14px 20px;
       background: var(--red); color: #fff;
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 15px; font-weight: 600;
-      border: none; border-radius: 12px;
-      cursor: pointer; text-decoration: none;
-      transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
-      box-shadow: 0 4px 16px rgba(230,57,80,0.3);
-      margin-bottom: 8px;
+      font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600;
+      border: none; border-radius: 12px; cursor: pointer; text-decoration: none;
+      transition: transform .15s, box-shadow .15s, opacity .15s;
+      box-shadow: 0 4px 18px rgba(230,57,80,.28); margin-bottom: 8px;
     }
-    .btn:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(230,57,80,0.4);
-    }
+    .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(230,57,80,.38); }
     .btn:active:not(:disabled) { transform: translateY(0); }
-    .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
-    .btn.secondary {
-      background: var(--surface2);
-      color: var(--text);
-      box-shadow: none;
-      border: 1px solid var(--border);
+    .btn:disabled { opacity: .35; cursor: not-allowed; }
+    .btn.ghost {
+      background: var(--s2); color: var(--text);
+      box-shadow: none; border: 1px solid var(--border);
     }
-    .btn.secondary:hover:not(:disabled) { border-color: rgba(255,255,255,0.2); box-shadow: none; }
+    .btn.ghost:hover:not(:disabled) { border-color: rgba(255,255,255,.18); box-shadow: none; }
     .btn.success {
-      background: rgba(29,233,130,0.1);
-      border: 1px solid rgba(29,233,130,0.25);
-      color: var(--green);
-      box-shadow: none;
-      cursor: default;
+      background: rgba(29,233,130,.1); border: 1px solid rgba(29,233,130,.25);
+      color: var(--green); box-shadow: none; cursor: default;
     }
     .btn-link {
-      display: block;
-      text-align: center;
-      font-size: 13px;
-      color: var(--muted);
-      text-decoration: none;
-      padding: 8px;
-      transition: color 0.2s;
-      cursor: pointer;
-      background: none; border: none; width: 100%;
+      display: block; text-align: center; font-size: 13px;
+      color: var(--muted); text-decoration: none; padding: 8px;
+      background: none; border: none; width: 100%; cursor: pointer;
+      transition: color .2s;
     }
     .btn-link:hover { color: var(--text); }
 
-    /* ── PIN display ── */
-    .pin-block {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 28px 24px;
-      text-align: center;
-      margin-bottom: 20px;
+    /* ── PIN input boxes ── */
+    .pin-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 14px; }
+    .pin-box {
+      font-family: 'Space Mono', monospace; font-size: 34px; font-weight: 700;
+      width: 66px; height: 74px; text-align: center;
+      background: var(--s2); border: 2px solid var(--border);
+      border-radius: 12px; color: var(--text); padding: 0; outline: none;
+      transition: border-color .2s, box-shadow .2s;
     }
-    .pin-label {
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-    .pin-digits {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-    .pin-digit {
-      font-family: 'Space Mono', monospace;
-      font-size: 48px;
-      font-weight: 700;
-      width: 72px; height: 88px;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--bg);
-      border: 2px solid rgba(230,57,80,0.3);
-      border-radius: 14px;
-      color: var(--red);
-      box-shadow: 0 0 20px rgba(230,57,80,0.1), inset 0 1px 0 rgba(255,255,255,0.04);
-      animation: pinPop 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
-    }
-    .pin-digit:nth-child(1) { animation-delay: 0.05s; }
-    .pin-digit:nth-child(2) { animation-delay: 0.10s; }
-    .pin-digit:nth-child(3) { animation-delay: 0.15s; }
-    .pin-digit:nth-child(4) { animation-delay: 0.20s; }
-    @keyframes pinPop {
-      from { opacity: 0; transform: scale(0.7) translateY(8px); }
-      to   { opacity: 1; transform: scale(1) translateY(0); }
-    }
-    .pin-site {
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .pin-site strong { color: var(--text); font-weight: 600; }
-
-    /* ── PIN input (4 boxes) ── */
-    .pin-inputs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 12px;
-      justify-content: center;
-    }
-    .pin-inputs input {
-      font-family: 'Space Mono', monospace;
-      font-size: 32px;
-      font-weight: 700;
-      width: 64px; height: 72px;
-      text-align: center;
-      background: var(--surface2);
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      color: var(--text);
-      padding: 0;
-      margin: 0;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .pin-inputs input:focus {
-      border-color: rgba(230,57,80,0.6);
-      box-shadow: 0 0 0 3px rgba(230,57,80,0.1);
-    }
-
-    /* ── Steps ── */
-    .steps { margin-bottom: 24px; }
-    .step {
-      display: flex; gap: 14px; padding: 12px 0;
-      border-bottom: 1px solid var(--border);
-      opacity: 0; transform: translateY(6px);
-      animation: fadeUp 0.35s ease forwards;
-    }
-    .step:last-child { border-bottom: none; }
-    .step:nth-child(1) { animation-delay: 0.05s; }
-    .step:nth-child(2) { animation-delay: 0.12s; }
-    .step:nth-child(3) { animation-delay: 0.19s; }
-    @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-    .step-n {
-      font-size: 11px; font-weight: 700;
-      color: var(--red);
-      background: var(--red-glow);
-      border: 1px solid rgba(230,57,80,0.2);
-      border-radius: 6px;
-      width: 24px; height: 24px;
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0; margin-top: 2px;
-    }
-    .step.done .step-n { color: var(--green); background: rgba(29,233,130,0.1); border-color: rgba(29,233,130,0.2); }
-    .step-t { font-size: 14px; font-weight: 600; margin-bottom: 1px; }
-    .step-d { font-size: 13px; color: var(--muted); font-weight: 400; }
+    .pin-box:focus { border-color: rgba(230,57,80,.6); box-shadow: 0 0 0 3px rgba(230,57,80,.1); }
 
     /* ── Notices ── */
     .notice {
-      padding: 12px 14px;
-      border-radius: 10px;
-      font-size: 13px;
-      line-height: 1.55;
-      margin-bottom: 12px;
+      padding: 12px 14px; border-radius: 10px;
+      font-size: 13px; line-height: 1.55; margin-bottom: 10px;
     }
-    .notice.ok   { background: rgba(29,233,130,0.08); border: 1px solid rgba(29,233,130,0.2); color: #6effc0; }
-    .notice.err  { background: rgba(230,57,80,0.08);  border: 1px solid rgba(230,57,80,0.22); color: #ff8898; }
-    .notice.info { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); color: #93bbfc; }
+    .notice.ok   { background: rgba(29,233,130,.08); border: 1px solid rgba(29,233,130,.2); color: #6effc0; }
+    .notice.err  { background: rgba(230,57,80,.08);  border: 1px solid rgba(230,57,80,.22); color: #ff8898; }
+    .notice.info { background: rgba(59,130,246,.08); border: 1px solid rgba(59,130,246,.2);  color: #93bbfc; }
+    .notice.warn { background: rgba(250,180,0,.07);  border: 1px solid rgba(250,180,0,.2);   color: #ffd060; }
 
-    /* ── Progress / spinner ── */
+    /* ── Install note ── */
+    .install-note {
+      background: var(--s2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 14px 16px;
+      font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 10px;
+    }
+    .install-note strong { color: var(--text); }
+    .chip {
+      display: inline-block; background: rgba(255,255,255,.06);
+      border: 1px solid var(--border); border-radius: 5px;
+      padding: 1px 6px; font-family: 'Space Mono', monospace;
+      font-size: 11px; color: var(--text);
+    }
+
+    /* ── Spinner ── */
     .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,0.2);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.65s linear infinite;
-      flex-shrink: 0;
+      width: 15px; height: 15px;
+      border: 2px solid rgba(255,255,255,.2);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin .65s linear infinite; flex-shrink: 0;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .progress-wrap {
-      background: rgba(255,255,255,0.04);
-      border-radius: 4px; height: 3px;
-      margin: 12px 0; overflow: hidden;
+    /* ── Steps ── */
+    .steps { margin-bottom: 20px; }
+    .step { display: flex; gap: 13px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+    .step:last-child { border-bottom: none; }
+    .step-n {
+      font-size: 11px; font-weight: 700; color: var(--red);
+      background: var(--rglow); border: 1px solid rgba(230,57,80,.2);
+      border-radius: 6px; width: 23px; height: 23px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 2px;
     }
-    .progress-bar {
-      height: 100%;
-      background: var(--red);
-      border-radius: 4px;
-      width: 0%;
-      transition: width 0.5s ease;
-      box-shadow: 0 0 6px var(--red);
-    }
+    .step.done .step-n { color: var(--green); background: rgba(29,233,130,.1); border-color: rgba(29,233,130,.2); }
+    .step-t { font-size: 14px; font-weight: 600; margin-bottom: 1px; }
+    .step-d { font-size: 12px; color: var(--muted); }
 
-    /* ── Polling dots ── */
-    .polling-dots span {
-      display: inline-block;
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--red);
-      margin: 0 2px;
-      animation: dotBounce 1.2s ease-in-out infinite;
-    }
-    .polling-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .polling-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes dotBounce {
-      0%,80%,100% { transform: scale(0.5); opacity: 0.4; }
-      40%          { transform: scale(1);   opacity: 1; }
-    }
-
-    hr { border: none; border-top: 1px solid var(--border); margin: 18px 0; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
     .small { font-size: 12px; color: var(--muted); text-align: center; margin-top: 6px; }
 
     /* ── Views ── */
     .view { display: none; }
     .view.active { display: block; }
-
-    /* ── Android install box ── */
-    .install-box {
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 16px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 12px;
-    }
-    .install-box strong { color: var(--text); }
-    .code-chip {
-      display: inline-block;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid var(--border);
-      border-radius: 5px;
-      padding: 1px 6px;
-      font-family: 'Space Mono', monospace;
-      font-size: 12px;
-      color: var(--text);
-    }
   </style>
 </head>
 <body>
 <div class="card">
 
-  <!-- HEADER (shared) -->
   <div class="header">
-    <div class="logo-mark">▶</div>
+    <div class="logo">▶</div>
     <span class="logo-name">KODI SETUP</span>
-    <span class="platform-tag" id="platform-tag">Detecting…</span>
   </div>
 
-  <!-- ══ LANDING ══════════════════════════════════════════════════════════ -->
+  <!-- ══ MAIN LANDING ════════════════════════════════════════════════════ -->
   <div id="view-landing" class="view">
-    <h1>Set up your videos</h1>
-    <p class="sub">Paste your SharePoint share link and we'll configure Kodi for you.</p>
-    <div class="field-label">Your SharePoint link</div>
-    <textarea id="share-input" placeholder="https://tenant-my.sharepoint.com/:f:/g/personal/…"></textarea>
-    <button class="btn" id="landing-btn" onclick="handleLanding()">▶ Connect to Kodi</button>
-    <p class="small" id="method-hint"></p>
-  </div>
+    <h1>What device are you on?</h1>
+    <p class="sub">Choose your setup method below.</p>
 
-  <!-- ══ TV — show PIN ════════════════════════════════════════════════════ -->
-  <div id="view-tv-pin" class="view">
-    <h1>Scan or enter PIN</h1>
-    <p class="sub">On your phone, go to this site and enter the PIN shown below.</p>
-    <div class="pin-block">
-      <div class="pin-label">Your setup PIN</div>
-      <div class="pin-digits" id="tv-pin-digits">
-        <div class="pin-digit">–</div>
-        <div class="pin-digit">–</div>
-        <div class="pin-digit">–</div>
-        <div class="pin-digit">–</div>
+    <div class="mode-grid">
+      <div class="mode-btn" id="mode-tv" onclick="selectMode('tv')">
+        <div class="mode-icon">📺</div>
+        <div class="mode-label">Android TV</div>
+        <div class="mode-desc">Enter PIN shown in Kodi on the TV</div>
       </div>
-      <div class="pin-site">Visit <strong>ghemed.github.io/kodi-setup</strong> on your phone</div>
+      <div class="mode-btn" id="mode-phone" onclick="selectMode('phone')">
+        <div class="mode-icon">📱</div>
+        <div class="mode-label">Android Phone</div>
+        <div class="mode-desc">Kodi installed on this phone</div>
+      </div>
+      <div class="mode-btn" id="mode-windows" onclick="selectMode('windows')">
+        <div class="mode-icon">🖥</div>
+        <div class="mode-label">Windows PC</div>
+        <div class="mode-desc">Kodi running on this computer</div>
+      </div>
+      <div class="mode-btn" id="mode-other" onclick="selectMode('other')">
+        <div class="mode-icon">🔗</div>
+        <div class="mode-label">Just the link</div>
+        <div class="mode-desc">Get a shareable setup link</div>
+      </div>
     </div>
-    <div class="notice info" style="text-align:center">
-      Waiting for your phone&nbsp;&nbsp;<span class="polling-dots"><span></span><span></span><span></span></span>
+
+    <!-- TV sub-section -->
+    <div class="section" id="sec-tv">
+      <div class="notice info" style="margin-bottom:14px">
+        <strong>First:</strong> Open Kodi on your TV → go into the <em>OneDrive Share</em> addon → tap <strong>"Pair with phone — enter PIN"</strong>.<br>
+        A 4-digit PIN will appear on your TV screen.
+      </div>
+      <div class="field-label">PIN from your TV screen</div>
+      <div class="pin-row">
+        <input class="pin-box" type="text" maxlength="1" id="p0" inputmode="numeric" autocomplete="off">
+        <input class="pin-box" type="text" maxlength="1" id="p1" inputmode="numeric" autocomplete="off">
+        <input class="pin-box" type="text" maxlength="1" id="p2" inputmode="numeric" autocomplete="off">
+        <input class="pin-box" type="text" maxlength="1" id="p3" inputmode="numeric" autocomplete="off">
+      </div>
+      <div class="field-label" style="margin-top:14px">Your SharePoint link</div>
+      <textarea id="tv-url" placeholder="https://tenant-my.sharepoint.com/:f:/g/personal/…"></textarea>
+      <button class="btn" id="tv-send-btn" onclick="sendToTV()">▶ Send to TV</button>
+      <div id="tv-notice"></div>
+      <p class="small">Your phone and TV must be on the same WiFi network.</p>
     </div>
-    <p class="small" id="tv-countdown"></p>
+
+    <!-- Phone sub-section -->
+    <div class="section" id="sec-phone">
+      <div class="field-label">Your SharePoint link</div>
+      <textarea id="phone-url" placeholder="https://tenant-my.sharepoint.com/:f:/g/personal/…"></textarea>
+      <button class="btn" onclick="sendPhoneDirect()">▶ Open in Kodi</button>
+      <div id="phone-notice"></div>
+      <div class="install-note">
+        <strong>Addon not installed yet?</strong><br>
+        <a id="dl-link" href="https://github.com/ghemed/kodi-setup/raw/main/plugin.video.onedriveshare.zip" download style="color:var(--green)">⬇ Download addon zip</a>, then in Kodi: Add-ons → <span class="chip">📦</span> Install from zip → Downloads.<br><br>
+        <strong>⚠ If Kodi crashes on first install</strong> — just close it and install again. Works on the second try.
+      </div>
+    </div>
+
+    <!-- Windows sub-section -->
+    <div class="section" id="sec-windows">
+      <div class="field-label">Your SharePoint link</div>
+      <textarea id="win-url" placeholder="https://tenant-my.sharepoint.com/:f:/g/personal/…"></textarea>
+      <button class="btn" id="win-go-btn" onclick="startWindows()">▶ Configure Kodi Automatically</button>
+      <div id="win-go-notice"></div>
+      <p class="small">Kodi must be running with HTTP control enabled on port 8080</p>
+    </div>
+
+    <!-- Other sub-section -->
+    <div class="section" id="sec-other">
+      <div class="field-label">Your SharePoint link</div>
+      <textarea id="other-url" placeholder="https://tenant-my.sharepoint.com/:f:/g/personal/…"></textarea>
+      <button class="btn" onclick="generateLink()">🔗 Generate Setup Link</button>
+      <div id="other-notice"></div>
+    </div>
   </div>
 
-  <!-- ══ PHONE — enter PIN ════════════════════════════════════════════════ -->
-  <div id="view-phone-pin" class="view">
-    <h1>Enter TV PIN</h1>
-    <p class="sub">Type the 4-digit PIN shown on your TV screen, then paste your SharePoint link.</p>
-    <div class="field-label">PIN from TV</div>
-    <div class="pin-inputs">
-      <input type="text" maxlength="1" id="p0" inputmode="numeric" pattern="[0-9]" autocomplete="off">
-      <input type="text" maxlength="1" id="p1" inputmode="numeric" pattern="[0-9]" autocomplete="off">
-      <input type="text" maxlength="1" id="p2" inputmode="numeric" pattern="[0-9]" autocomplete="off">
-      <input type="text" maxlength="1" id="p3" inputmode="numeric" pattern="[0-9]" autocomplete="off">
-    </div>
-    <div class="field-label" style="margin-top:16px">Your SharePoint link</div>
-    <textarea id="phone-url-input" placeholder="https://tenant-my.sharepoint.com/:f:/g/personal/…"></textarea>
-    <button class="btn" id="phone-pin-btn" onclick="submitPhonePin()">▶ Send to TV</button>
-    <div id="phone-pin-notice"></div>
-    <hr>
-    <p class="sub" style="margin-bottom:10px">No TV? Configure Kodi on this phone directly:</p>
-    <button class="btn secondary" onclick="sendViaIntent()">▶ Open in Kodi (this phone)</button>
-  </div>
-
-  <!-- ══ WINDOWS AUTO ══════════════════════════════════════════════════════ -->
+  <!-- ══ WINDOWS AUTO-SETUP ══════════════════════════════════════════════ -->
   <div id="view-windows" class="view">
     <h1>Configuring Kodi…</h1>
-    <p class="sub">Kodi is running on this PC. Pushing settings automatically.</p>
+    <p class="sub">Pushing settings to Kodi on this PC automatically.</p>
     <div class="steps">
       <div class="step" id="ws1"><div class="step-n">1</div><div><div class="step-t">Install addon</div><div class="step-d">Downloading and registering the video plugin</div></div></div>
       <div class="step" id="ws2"><div class="step-n">2</div><div><div class="step-t">Save share URL</div><div class="step-d">Persisting your personal video share</div></div></div>
       <div class="step" id="ws3"><div class="step-n">3</div><div><div class="step-t">Open videos</div><div class="step-d">Navigating Kodi to your library</div></div></div>
     </div>
-    <button class="btn" id="win-btn" disabled><div class="spinner"></div><span>Working…</span></button>
-    <div id="win-notice"></div>
+    <button class="btn" id="win-prog-btn" disabled><div class="spinner"></div><span>Working…</span></button>
+    <div id="win-prog-notice"></div>
   </div>
 
-  <!-- ══ WINDOWS ENABLE HTTP ══════════════════════════════════════════════ -->
-  <div id="view-windows-enable" class="view">
+  <!-- ══ WINDOWS ENABLE HTTP ════════════════════════════════════════════ -->
+  <div id="view-win-enable" class="view">
     <h1>Enable HTTP control</h1>
-    <p class="sub">One-time step — lets this page talk to Kodi directly.</p>
+    <p class="sub">One-time step — lets this page talk directly to Kodi.</p>
     <div class="steps">
       <div class="step"><div class="step-n">1</div><div><div class="step-t">Open Kodi Settings</div><div class="step-d">Settings → Services → Control</div></div></div>
-      <div class="step"><div class="step-n">2</div><div><div class="step-t">Turn on "Allow remote control via HTTP"</div><div class="step-d">Port 8080 · no password needed</div></div></div>
-      <div class="step"><div class="step-n">3</div><div><div class="step-t">Click Retry</div><div class="step-d">Kodi will be configured automatically</div></div></div>
+      <div class="step"><div class="step-n">2</div><div><div class="step-t">Turn on "Allow remote control via HTTP"</div><div class="step-d">Keep port 8080 · no password needed</div></div></div>
+      <div class="step"><div class="step-n">3</div><div><div class="step-t">Click Retry below</div><div class="step-d">Setup finishes automatically</div></div></div>
     </div>
     <button class="btn" onclick="retryWindows()">↻ Retry</button>
   </div>
 
-  <!-- ══ ANDROID INSTALL ═══════════════════════════════════════════════════ -->
-  <div id="view-android" class="view">
-    <h1>Two quick steps</h1>
-    <p class="sub">Install the addon, then tap once to configure.</p>
-    <div class="steps">
-      <div class="step" id="as1">
-        <div class="step-n">1</div>
-        <div>
-          <div class="step-t">Install the addon</div>
-          <div class="step-d">Download, then install via Kodi → Add-ons → Install from zip</div>
-        </div>
-      </div>
-      <div class="step" id="as2">
-        <div class="step-n">2</div>
-        <div>
-          <div class="step-t">Configure your share</div>
-          <div class="step-d">Tap the button — Kodi opens and saves your URL automatically</div>
-        </div>
-      </div>
-    </div>
-    <a id="android-dl" class="btn secondary" href="#" download>⬇ Download Addon (.zip)</a>
-    <div class="install-box">
-      After downloading: open Kodi → Add-ons → <span class="code-chip">📦 box icon</span> top-left → Install from zip → Downloads → select the file.<br><br>
-      <strong>⚠ First install may crash Kodi — just close and install again. It works on the second try.</strong>
-    </div>
-    <button class="btn" id="android-configure-btn" onclick="androidConfigure()">▶ Configure Kodi (tap after install)</button>
-    <div id="android-notice"></div>
-    <hr>
-    <a id="android-share-link" class="btn-link" href="#" target="_blank">Open share folder in browser instead ↗</a>
-  </div>
-
-  <!-- ══ SUCCESS ══════════════════════════════════════════════════════════ -->
+  <!-- ══ SUCCESS ═══════════════════════════════════════════════════════ -->
   <div id="view-success" class="view">
-    <h1>All done! 🎉</h1>
-    <div class="notice ok">✓ Kodi has been configured. Your videos are loading now.</div>
-    <p class="sub">Next time just open Kodi — no setup needed.</p>
+    <h1>Done! 🎉</h1>
+    <div class="notice ok">✓ Kodi has been configured.<br>Your videos are loading now.</div>
+    <p class="sub" style="margin-top:12px">Next time just open Kodi — no setup needed.</p>
   </div>
 
-</div><!-- .card -->
+</div>
 
 <script>
-// ─── Config ──────────────────────────────────────────────────────────────────
-var ADDON_ZIP  = 'https://github.com/ghemed/kodi-setup/raw/main/plugin.video.onedriveshare.zip';
 var ADDON_ID   = 'plugin.video.onedriveshare';
 var KODI_LOCAL = 'http://localhost:8080/jsonrpc';
+var ADDON_ZIP  = 'https://github.com/ghemed/kodi-setup/raw/main/plugin.video.onedriveshare.zip';
+var SETUP_URL  = 'https://ghemed.github.io/kodi-setup/';
 
-// ─── State ───────────────────────────────────────────────────────────────────
-var shareUrl    = '';
-var currentPin  = '';
-var tvPollTimer = null;
-var tvDeadline  = 0;
+var _shareUrl  = '';
+var _mode      = '';
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+// ── Views ───────────────────────────────────────────────────────────────────
 function show(id) {
   document.querySelectorAll('.view').forEach(function(v){ v.classList.remove('active'); });
   document.getElementById(id).classList.add('active');
 }
 function notice(id, type, html) {
-  document.getElementById(id).innerHTML = '<div class="notice ' + type + '">' + html + '</div>';
+  var el = document.getElementById(id);
+  if (el) el.innerHTML = '<div class="notice ' + type + '">' + html + '</div>';
 }
 function markDone(id) {
   var el = document.getElementById(id);
@@ -532,15 +344,45 @@ function markDone(id) {
   el.classList.add('done');
   el.querySelector('.step-n').textContent = '✓';
 }
-function isAndroid() { return /android/i.test(navigator.userAgent); }
-function isWindows() { return /windows/i.test(navigator.userAgent); }
-function isTV() {
-  return /android/i.test(navigator.userAgent) &&
-    (/tv|android\s?tv|googletv|crkey/i.test(navigator.userAgent) ||
-     (!('ontouchstart' in window) && window.screen.width >= 1280));
+
+// ── Mode selection ──────────────────────────────────────────────────────────
+function selectMode(mode) {
+  _mode = mode;
+  document.querySelectorAll('.mode-btn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.section').forEach(function(s){ s.classList.remove('active'); });
+  document.getElementById('mode-' + mode).classList.add('active');
+  document.getElementById('sec-' + mode).classList.add('active');
 }
-async function kodiCall(url, method, params) {
-  var r = await fetch(url, {
+
+// ── PIN box wiring ──────────────────────────────────────────────────────────
+function wirePinBoxes() {
+  var ids = ['p0','p1','p2','p3'];
+  ids.forEach(function(id, i) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', function() {
+      this.value = this.value.replace(/\D/g,'').slice(-1);
+      if (this.value && i < 3) document.getElementById(ids[i+1]).focus();
+    });
+    el.addEventListener('keydown', function(e) {
+      if (e.key === 'Backspace' && !this.value && i > 0) document.getElementById(ids[i-1]).focus();
+    });
+    el.addEventListener('paste', function(e) {
+      e.preventDefault();
+      var p = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
+      ids.forEach(function(bid, j){ if (p[j]) document.getElementById(bid).value = p[j]; });
+      document.getElementById(ids[Math.min(3, p.length)]).focus();
+    });
+  });
+}
+
+function getPin() {
+  return ['p0','p1','p2','p3'].map(function(id){ return document.getElementById(id).value; }).join('');
+}
+
+// ── Kodi JSON-RPC ──────────────────────────────────────────────────────────
+async function kodiCall(endpoint, method, params) {
+  var r = await fetch(endpoint, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({jsonrpc:'2.0', id:1, method:method, params:params||{}})
@@ -549,276 +391,172 @@ async function kodiCall(url, method, params) {
   if (d.error) throw new Error(d.error.message);
   return d.result;
 }
-async function kodiPing(url) {
-  try { await kodiCall(url, 'JSONRPC.Ping'); return true; } catch(e) { return false; }
+async function kodiPing(ep) {
+  try { await kodiCall(ep, 'JSONRPC.Ping'); return true; } catch(e) { return false; }
 }
 
-// ─── PIN helpers ─────────────────────────────────────────────────────────────
-// We use a 4-digit PIN. The phone sends it via Kodi's setpin plugin action
-// (same device intent, OR via JSON-RPC to the TV's IP if on different devices).
-// Here we also support an HTTP relay via jsonbin.io free tier as fallback.
+// ── TV flow: send PIN + URL via JSON-RPC to Kodi on TV ─────────────────────
+// The TV's Kodi has a file-based PIN slot. We push the URL by calling the
+// plugin's setpin action via JSON-RPC (Player.Open with plugin:// URL).
+// We try localhost first (same device fallback), then ask for IP.
 
-var RELAY_BASE = 'https://api.jsonbin.io/v3/b';
-var RELAY_KEY  = '';  // Set to your jsonbin API key if you want cloud relay
+async function sendToTV() {
+  var pin = getPin();
+  var url = document.getElementById('tv-url').value.trim();
+  if (pin.length !== 4) { notice('tv-notice','err','Enter all 4 digits from your TV screen.'); return; }
+  if (!url) { notice('tv-notice','err','Paste your SharePoint link.'); return; }
 
-function generatePin() {
-  return String(Math.floor(1000 + Math.random() * 9000));
-}
-
-// ─── TV side: show PIN, poll for URL ─────────────────────────────────────────
-function showTVPin() {
-  currentPin = generatePin();
-  var digits  = document.getElementById('tv-pin-digits');
-  digits.innerHTML = '';
-  for (var i = 0; i < 4; i++) {
-    var d = document.createElement('div');
-    d.className = 'pin-digit';
-    d.textContent = currentPin[i];
-    digits.appendChild(d);
-  }
-
-  // Poll Kodi's own data dir via plugin:// action — Kodi writes to file
-  // The phone will call:
-  //   Android intent: plugin://ADDON_ID/?action=setpin&pin=XXXX&url=ENCODED
-  //   Or JSON-RPC: Player.Open with that plugin:// URL
-  show('view-tv-pin');
-  tvDeadline = Date.now() + 120000;
-  updateTVCountdown();
-  pollTVPin();
-}
-
-function updateTVCountdown() {
-  var el  = document.getElementById('tv-countdown');
-  var rem = Math.max(0, Math.ceil((tvDeadline - Date.now()) / 1000));
-  if (el) el.textContent = rem + 's remaining — refresh page to generate a new PIN';
-  if (rem > 0) setTimeout(updateTVCountdown, 1000);
-}
-
-function pollTVPin() {
-  if (Date.now() > tvDeadline) return;
-  // On Android TV we probe Kodi via JSON-RPC to check if the PIN slot was filled
-  // by calling a test endpoint (works because Kodi is local)
-  kodiCall(KODI_LOCAL, 'Settings.GetSettingValue', {setting: ADDON_ID + '.share_url'})
-    .then(function(result) {
-      if (result && result.value && result.value.trim()) {
-        clearTimeout(tvPollTimer);
-        show('view-success');
-        return;
-      }
-    }).catch(function(){});
-  tvPollTimer = setTimeout(pollTVPin, 3000);
-}
-
-// ─── Phone side: enter PIN boxes ─────────────────────────────────────────────
-function setupPinBoxes() {
-  var boxes = ['p0','p1','p2','p3'];
-  boxes.forEach(function(id, i) {
-    var el = document.getElementById(id);
-    el.addEventListener('input', function() {
-      this.value = this.value.replace(/\D/g,'').slice(-1);
-      if (this.value && i < 3) document.getElementById(boxes[i+1]).focus();
-    });
-    el.addEventListener('keydown', function(e) {
-      if (e.key === 'Backspace' && !this.value && i > 0)
-        document.getElementById(boxes[i-1]).focus();
-    });
-    el.addEventListener('paste', function(e) {
-      e.preventDefault();
-      var pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g,'');
-      boxes.forEach(function(bid, j) {
-        if (pasted[j]) document.getElementById(bid).value = pasted[j];
-      });
-      document.getElementById(boxes[3]).focus();
-    });
-  });
-}
-
-function getEnteredPin() {
-  return ['p0','p1','p2','p3'].map(function(id){ return document.getElementById(id).value; }).join('');
-}
-
-async function submitPhonePin() {
-  var pin  = getEnteredPin();
-  var url  = document.getElementById('phone-url-input').value.trim();
-  shareUrl = url;
-
-  if (pin.length !== 4) { notice('phone-pin-notice','err','Enter the 4-digit PIN from your TV.'); return; }
-  if (!url)             { notice('phone-pin-notice','err','Paste your SharePoint URL.'); return; }
-
-  var btn = document.getElementById('phone-pin-btn');
+  var btn = document.getElementById('tv-send-btn');
   btn.disabled = true;
-  btn.innerHTML = '<div class="spinner"></div><span>Sending to TV…</span>';
+  btn.innerHTML = '<div class="spinner"></div><span>Connecting to TV…</span>';
 
-  // Try: Android Intent to same device first (if same device)
-  var sent = false;
+  // Build the plugin URL that Kodi will route to handle_setpin()
+  var pluginUrl = 'plugin://' + ADDON_ID + '/?action=setpin&pin=' + pin + '&url=' + encodeURIComponent(url);
 
-  // Try JSON-RPC to TV (user enters TV IP below, or we try local)
-  var tvIp = document.getElementById('tv-ip-input') ? document.getElementById('tv-ip-input').value.trim() : '';
+  // Try to auto-discover Kodi via common LAN IPs, then fall back to prompt
+  var sent = await tryKodiEndpoints(pluginUrl);
+
+  if (sent) {
+    notice('tv-notice','ok','✓ Sent! Your TV is loading videos now.');
+    btn.innerHTML = '✓ Done'; btn.classList.add('success');
+  } else {
+    // Ask for IP
+    btn.disabled = false; btn.innerHTML = '▶ Send to TV';
+    showIpPrompt(pluginUrl);
+  }
+}
+
+async function tryKodiEndpoints(pluginUrl) {
   var endpoints = ['http://localhost:8080/jsonrpc'];
-  if (tvIp) endpoints.unshift('http://' + tvIp + ':8080/jsonrpc');
-
   for (var i = 0; i < endpoints.length; i++) {
-    var ep = endpoints[i];
     try {
-      var pluginUrl = 'plugin://' + ADDON_ID + '/?action=setpin&pin=' + pin + '&url=' + encodeURIComponent(url);
-      await kodiCall(ep, 'Player.Open', {item: {file: pluginUrl}});
-      notice('phone-pin-notice','ok','✓ Sent! Your TV is loading the videos now.');
-      sent = true; break;
+      await kodiCall(endpoints[i], 'Player.Open', {item: {file: pluginUrl}});
+      return true;
     } catch(e) { /* try next */ }
   }
-
-  if (!sent) {
-    // Fallback: Android Intent (same device)
-    var intentUrl = 'intent://plugin.video.onedriveshare/?action=setpin&pin=' + pin + '&url=' + encodeURIComponent(url)
-                  + '#Intent;scheme=plugin;package=org.xbmc.kodi;end';
-    window.location.href = intentUrl;
-    setTimeout(function(){
-      notice('phone-pin-notice','ok','✓ Kodi opened — check your screen.');
-      btn.innerHTML = '✓ Sent'; btn.classList.add('success');
-    }, 1500);
-    return;
-  }
-
-  btn.innerHTML = '✓ Done';
-  btn.classList.add('success');
-  btn.disabled = false;
+  return false;
 }
 
-// ─── Android phone → same device ─────────────────────────────────────────────
-function androidConfigure() {
-  var encoded   = encodeURIComponent(shareUrl);
-  var intentUrl = 'intent://plugin.video.onedriveshare/?action=seturl&url=' + encoded
-                + '#Intent;scheme=plugin;package=org.xbmc.kodi;end';
-  window.location.href = intentUrl;
-  var btn = document.getElementById('android-configure-btn');
-  btn.textContent = '⏳ Opening Kodi…';
+function showIpPrompt(pluginUrl) {
+  notice('tv-notice','warn',
+    'Could not reach Kodi automatically.<br><br>' +
+    'Enter your TV\'s IP address:<br>' +
+    '<div style="display:flex;gap:8px;margin-top:10px">' +
+    '<input type="text" id="tv-ip" placeholder="192.168.1.100" inputmode="decimal" ' +
+    'style="flex:1;padding:10px 12px;background:#13132b;border:1.5px solid rgba(255,255,255,0.07);border-radius:9px;color:#eeeeff;font-family:Space Grotesk,sans-serif;font-size:14px;outline:none">' +
+    '<button onclick="sendWithIP(\'' + pluginUrl.replace(/'/g,"\\'") + '\')" ' +
+    'style="padding:10px 16px;background:#e63950;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer">Send</button>' +
+    '</div>' +
+    '<div style="font-size:12px;color:#55558a;margin-top:8px">Find IP in Kodi → Settings → System → Network</div>'
+  );
+}
+
+async function sendWithIP(pluginUrl) {
+  var ip = document.getElementById('tv-ip') ? document.getElementById('tv-ip').value.trim() : '';
+  if (!ip) return;
+  var ep = 'http://' + ip + ':8080/jsonrpc';
+  try {
+    await kodiCall(ep, 'Player.Open', {item: {file: pluginUrl}});
+    notice('tv-notice','ok','✓ Sent to ' + ip + '! Your TV is loading videos now.');
+    document.getElementById('tv-send-btn').innerHTML = '✓ Done';
+    document.getElementById('tv-send-btn').classList.add('success');
+  } catch(e) {
+    notice('tv-notice','err',
+      '❌ Still can\'t reach Kodi at ' + ip + ':8080<br>' +
+      'Check: Kodi → Settings → Services → Control → "Allow remote control via HTTP" must be ON.'
+    );
+  }
+}
+
+// ── Phone direct (intent) ───────────────────────────────────────────────────
+function sendPhoneDirect() {
+  var url = document.getElementById('phone-url').value.trim();
+  if (!url) { notice('phone-notice','err','Paste your SharePoint link first.'); return; }
+  var intent = 'intent://plugin.video.onedriveshare/?action=seturl&url=' + encodeURIComponent(url)
+             + '#Intent;scheme=plugin;package=org.xbmc.kodi;end';
+  window.location.href = intent;
   setTimeout(function(){
-    notice('android-notice','ok','✓ Kodi should have opened.');
-    btn.textContent = '✓ Done'; btn.classList.add('success');
+    notice('phone-notice','ok','✓ Kodi should have opened. Check your screen.');
   }, 1800);
 }
 
-function sendViaIntent() {
-  var url = document.getElementById('phone-url-input').value.trim()
-         || shareUrl;
-  if (!url) { alert('Paste your SharePoint URL first.'); return; }
-  var intentUrl = 'intent://plugin.video.onedriveshare/?action=seturl&url=' + encodeURIComponent(url)
-                + '#Intent;scheme=plugin;package=org.xbmc.kodi;end';
-  window.location.href = intentUrl;
-  setTimeout(function(){ show('view-success'); }, 1500);
+// ── Generate shareable link ─────────────────────────────────────────────────
+function generateLink() {
+  var url = document.getElementById('other-url').value.trim();
+  if (!url) { notice('other-notice','err','Paste your SharePoint link first.'); return; }
+  var link = SETUP_URL + '?url=' + encodeURIComponent(url);
+  notice('other-notice','ok',
+    'Your setup link:<br><br>' +
+    '<input type="text" readonly value="' + link.replace(/"/g,'&quot;') + '" ' +
+    'onclick="this.select()" ' +
+    'style="width:100%;padding:9px 12px;background:#06060f;border:1px solid rgba(255,255,255,0.1);' +
+    'border-radius:8px;color:#eeeeff;font-size:12px;font-family:Space Mono,monospace;cursor:pointer;outline:none">' +
+    '<br><span style="font-size:12px">Tap to select, then copy and share.</span>'
+  );
 }
 
-// ─── Windows auto-setup ───────────────────────────────────────────────────────
+// ── Windows ─────────────────────────────────────────────────────────────────
+async function startWindows() {
+  var url = document.getElementById('win-url').value.trim();
+  if (!url) { notice('win-go-notice','err','Paste your SharePoint link first.'); return; }
+  _shareUrl = url;
+  if (await kodiPing(KODI_LOCAL)) { show('view-windows'); runWindowsSetup(); }
+  else show('view-win-enable');
+}
+
 async function retryWindows() {
   if (await kodiPing(KODI_LOCAL)) { show('view-windows'); runWindowsSetup(); }
-  else alert('Still cannot reach Kodi. Check that HTTP control is enabled.');
+  else alert('Still cannot reach Kodi. Make sure HTTP control is enabled.');
 }
 
 async function runWindowsSetup() {
-  var btn = document.getElementById('win-btn');
+  var btn = document.getElementById('win-prog-btn');
   btn.disabled = true; btn.innerHTML = '<div class="spinner"></div><span>Installing addon…</span>';
-
   try {
     await kodiCall(KODI_LOCAL, 'Addons.InstallAddon', {addonid: ADDON_ID});
   } catch(e) {
     try {
       await kodiCall(KODI_LOCAL, 'GUI.ActivateWindow', {window:'addonbrowser', parameters:['install', ADDON_ZIP]});
       await new Promise(function(r){ setTimeout(r, 4000); });
-    } catch(e2) { /* best effort */ }
+    } catch(e2) {}
   }
   markDone('ws1');
   btn.innerHTML = '<div class="spinner"></div><span>Saving URL…</span>';
-
   try {
-    await kodiCall(KODI_LOCAL, 'Settings.SetSettingValue', {setting: ADDON_ID + '.share_url', value: shareUrl});
+    await kodiCall(KODI_LOCAL, 'Settings.SetSettingValue', {setting: ADDON_ID + '.share_url', value: _shareUrl});
   } catch(e) {
     try {
-      await kodiCall(KODI_LOCAL, 'Player.Open', {item:{file:'plugin://'+ADDON_ID+'/?action=seturl&url='+encodeURIComponent(shareUrl)}});
+      await kodiCall(KODI_LOCAL, 'Player.Open', {item:{file:'plugin://'+ADDON_ID+'/?action=seturl&url='+encodeURIComponent(_shareUrl)}});
       await new Promise(function(r){ setTimeout(r, 2000); });
-    } catch(e2) { /* best effort */ }
+    } catch(e2) {}
   }
   markDone('ws2');
   btn.innerHTML = '<div class="spinner"></div><span>Opening videos…</span>';
-
   try {
     await kodiCall(KODI_LOCAL, 'GUI.ActivateWindow', {window:'videos', parameters:['plugin://'+ADDON_ID+'/']});
-  } catch(e) { /* best effort */ }
+  } catch(e) {}
   markDone('ws3');
-
-  notice('win-notice','ok','✓ Done! Check your Kodi window.');
+  notice('win-prog-notice','ok','✓ Done! Check your Kodi window.');
   btn.innerHTML = '✓ All Done'; btn.classList.add('success'); btn.disabled = false;
 }
 
-// ─── Landing ──────────────────────────────────────────────────────────────────
-async function handleLanding() {
-  var input = document.getElementById('share-input').value.trim();
-  if (!input) { alert('Please paste your SharePoint URL first.'); return; }
-  shareUrl = input;
-
-  if (isTV()) { showTVPin(); return; }
-
-  if (isAndroid()) {
-    document.getElementById('android-dl').href = ADDON_ZIP;
-    document.getElementById('android-share-link').href = shareUrl;
-    show('view-android'); return;
-  }
-
-  if (isWindows()) {
-    if (await kodiPing(KODI_LOCAL)) { show('view-windows'); runWindowsSetup(); }
-    else show('view-windows-enable');
-    return;
-  }
-
-  // Fallback — show phone PIN entry anyway (desktop non-Windows)
-  show('view-phone-pin');
-}
-
-// ─── Init ─────────────────────────────────────────────────────────────────────
-(function init() {
+// ── Init ────────────────────────────────────────────────────────────────────
+(function() {
+  wirePinBoxes();
+  // Pre-fill URL if passed via ?url= param
   var params = new URLSearchParams(window.location.search);
-  var tag    = document.getElementById('platform-tag');
-  var hint   = document.getElementById('method-hint');
-
-  // Pre-fill URL from query param (when sent via link)
   var preUrl = params.get('url');
   if (preUrl) {
-    document.getElementById('share-input').value = decodeURIComponent(preUrl);
-    shareUrl = decodeURIComponent(preUrl);
+    ['tv-url','phone-url','win-url','other-url'].forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) el.value = decodeURIComponent(preUrl);
+    });
   }
-
-  // Check if this is a "paired" redirect from TV page — show PIN entry
-  var tvMode = params.get('tvmode');
-
-  if (isTV()) {
-    tag.textContent = '📺 Android TV';
-    hint.textContent = 'Detected Android TV — a PIN code will appear for your phone.';
-    // If preUrl was passed via link (from phone), configure immediately
-    if (preUrl && tvMode) {
-      // Auto-configure
-    }
-    if (tvMode) { showTVPin(); return; }
-  } else if (isAndroid()) {
-    tag.textContent = '📱 Android';
-    hint.textContent = 'Detected Android phone.';
-    // Auto-show PIN entry mode if tvmode param present
-    if (tvMode) { show('view-phone-pin'); setupPinBoxes(); return; }
-  } else if (isWindows()) {
-    tag.textContent = '🖥 Windows';
-    hint.textContent = 'Detected Windows — Kodi will be configured automatically if it\'s running.';
-  } else {
-    tag.textContent = '💻 Desktop';
-  }
-
-  // Check for ?pin= (phone was sent here with PIN pre-filled)
+  // Pre-fill PIN if passed via ?pin= param
   var prePin = params.get('pin');
-  if (prePin && prePin.length === 4) {
-    show('view-phone-pin');
-    ['p0','p1','p2','p3'].forEach(function(id,i){ document.getElementById(id).value = prePin[i]; });
-    setupPinBoxes();
-    return;
+  if (prePin && /^\d{4}$/.test(prePin)) {
+    ['p0','p1','p2','p3'].forEach(function(id, i){ document.getElementById(id).value = prePin[i]; });
   }
-
-  setupPinBoxes();
   show('view-landing');
 })();
 </script>
