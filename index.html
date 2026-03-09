@@ -238,21 +238,23 @@
     <!-- TV sub-section -->
     <div class="section" id="sec-tv">
       <div class="notice info" style="margin-bottom:14px">
-        <strong>First:</strong> Open Kodi on your TV → go into the <em>OneDrive Share</em> addon → tap <strong>"Pair with phone — enter PIN"</strong>.<br>
-        A 4-digit PIN will appear on your TV screen.
+        <strong>On your TV:</strong> Open Kodi → OneDrive Share addon → tap <strong>"Pair with phone — enter PIN"</strong>. A 4-digit PIN and the TV's IP address will appear on screen.
       </div>
-      <div class="field-label">PIN from your TV screen</div>
+      <div class="field-label">PIN from TV screen</div>
       <div class="pin-row">
         <input class="pin-box" type="text" maxlength="1" id="p0" inputmode="numeric" autocomplete="off">
         <input class="pin-box" type="text" maxlength="1" id="p1" inputmode="numeric" autocomplete="off">
         <input class="pin-box" type="text" maxlength="1" id="p2" inputmode="numeric" autocomplete="off">
         <input class="pin-box" type="text" maxlength="1" id="p3" inputmode="numeric" autocomplete="off">
       </div>
-      <div class="field-label" style="margin-top:14px">Your SharePoint link</div>
+      <div class="field-label" style="margin-top:16px">TV's IP address</div>
+      <input type="text" id="tv-ip-input" placeholder="192.168.1.100" inputmode="decimal" style="margin-bottom:10px">
+      <p class="small" style="margin-bottom:14px;text-align:left">Find it in Kodi → Settings → System → Network</p>
+      <div class="field-label">Your SharePoint link</div>
       <textarea id="tv-url" placeholder="https://tenant-my.sharepoint.com/:f:/g/personal/…"></textarea>
       <button class="btn" id="tv-send-btn" onclick="sendToTV()">▶ Send to TV</button>
       <div id="tv-notice"></div>
-      <p class="small">Your phone and TV must be on the same WiFi network.</p>
+      <p class="small">Phone and TV must be on the same WiFi network.</p>
     </div>
 
     <!-- Phone sub-section -->
@@ -395,77 +397,36 @@ async function kodiPing(ep) {
   try { await kodiCall(ep, 'JSONRPC.Ping'); return true; } catch(e) { return false; }
 }
 
-// ── TV flow: send PIN + URL via JSON-RPC to Kodi on TV ─────────────────────
-// The TV's Kodi has a file-based PIN slot. We push the URL by calling the
-// plugin's setpin action via JSON-RPC (Player.Open with plugin:// URL).
-// We try localhost first (same device fallback), then ask for IP.
-
+// ── TV flow: use entered IP directly ────────────────────────────────────────
 async function sendToTV() {
   var pin = getPin();
   var url = document.getElementById('tv-url').value.trim();
+  var ip  = document.getElementById('tv-ip-input').value.trim();
+
   if (pin.length !== 4) { notice('tv-notice','err','Enter all 4 digits from your TV screen.'); return; }
-  if (!url) { notice('tv-notice','err','Paste your SharePoint link.'); return; }
+  if (!ip)              { notice('tv-notice','err','Enter your TV IP address.'); return; }
+  if (!url)             { notice('tv-notice','err','Paste your SharePoint link.'); return; }
 
   var btn = document.getElementById('tv-send-btn');
   btn.disabled = true;
-  btn.innerHTML = '<div class="spinner"></div><span>Connecting to TV…</span>';
+  btn.innerHTML = '<div class="spinner"></div><span>Connecting to ' + ip + '...</span>';
 
-  // Build the plugin URL that Kodi will route to handle_setpin()
   var pluginUrl = 'plugin://' + ADDON_ID + '/?action=setpin&pin=' + pin + '&url=' + encodeURIComponent(url);
-
-  // Try to auto-discover Kodi via common LAN IPs, then fall back to prompt
-  var sent = await tryKodiEndpoints(pluginUrl);
-
-  if (sent) {
-    notice('tv-notice','ok','✓ Sent! Your TV is loading videos now.');
-    btn.innerHTML = '✓ Done'; btn.classList.add('success');
-  } else {
-    // Ask for IP
-    btn.disabled = false; btn.innerHTML = '▶ Send to TV';
-    showIpPrompt(pluginUrl);
-  }
-}
-
-async function tryKodiEndpoints(pluginUrl) {
-  var endpoints = ['http://localhost:8080/jsonrpc'];
-  for (var i = 0; i < endpoints.length; i++) {
-    try {
-      await kodiCall(endpoints[i], 'Player.Open', {item: {file: pluginUrl}});
-      return true;
-    } catch(e) { /* try next */ }
-  }
-  return false;
-}
-
-function showIpPrompt(pluginUrl) {
-  notice('tv-notice','warn',
-    'Could not reach Kodi automatically.<br><br>' +
-    'Enter your TV\'s IP address:<br>' +
-    '<div style="display:flex;gap:8px;margin-top:10px">' +
-    '<input type="text" id="tv-ip" placeholder="192.168.1.100" inputmode="decimal" ' +
-    'style="flex:1;padding:10px 12px;background:#13132b;border:1.5px solid rgba(255,255,255,0.07);border-radius:9px;color:#eeeeff;font-family:Space Grotesk,sans-serif;font-size:14px;outline:none">' +
-    '<button onclick="sendWithIP(\'' + pluginUrl.replace(/'/g,"\\'") + '\')" ' +
-    'style="padding:10px 16px;background:#e63950;color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:600;cursor:pointer">Send</button>' +
-    '</div>' +
-    '<div style="font-size:12px;color:#55558a;margin-top:8px">Find IP in Kodi → Settings → System → Network</div>'
-  );
-}
-
-async function sendWithIP(pluginUrl) {
-  var ip = document.getElementById('tv-ip') ? document.getElementById('tv-ip').value.trim() : '';
-  if (!ip) return;
   var ep = 'http://' + ip + ':8080/jsonrpc';
+
   try {
     await kodiCall(ep, 'Player.Open', {item: {file: pluginUrl}});
-    notice('tv-notice','ok','✓ Sent to ' + ip + '! Your TV is loading videos now.');
-    document.getElementById('tv-send-btn').innerHTML = '✓ Done';
-    document.getElementById('tv-send-btn').classList.add('success');
+    notice('tv-notice','ok','✓ Sent! Your TV is loading videos now.');
+    btn.innerHTML = '✓ Done'; btn.classList.add('success');
   } catch(e) {
+    btn.disabled = false; btn.innerHTML = '▶ Send to TV';
     notice('tv-notice','err',
-      '❌ Still can\'t reach Kodi at ' + ip + ':8080<br>' +
-      'Check: Kodi → Settings → Services → Control → "Allow remote control via HTTP" must be ON.'
+      '❌ Could not reach Kodi at <strong>' + ip + ':8080</strong><br><br>' +
+      'On the TV: Kodi → Settings → Services → Control → ' +
+      '<strong>"Allow remote control via HTTP"</strong> must be ON.'
     );
   }
+}
 }
 
 // ── Phone direct (intent) ───────────────────────────────────────────────────
