@@ -243,10 +243,7 @@
         <input class="pin-box" type="text" maxlength="1" id="p2" inputmode="numeric" autocomplete="off">
         <input class="pin-box" type="text" maxlength="1" id="p3" inputmode="numeric" autocomplete="off">
       </div>
-      <div class="field-label" style="margin-top:14px">TV IP address</div>
-      <input type="text" id="tv-ip-input" placeholder="192.168.1.100" inputmode="decimal">
-      <p class="small" style="text-align:left;margin-bottom:12px;margin-top:-4px">Find in Kodi &rarr; Settings &rarr; System &rarr; Network</p>
-      <div class="field-label">Your SharePoint link</div>
+      <div class="field-label" style="margin-top:14px">Your SharePoint link</div>
       <textarea id="tv-url" placeholder="https://tenant-my.sharepoint.com/:f:/g/personal/&#8230;"></textarea>
       <button class="btn" id="tv-send-btn" onclick="sendToTV()">&#9654; Send to TV</button>
       <div id="tv-notice"></div>
@@ -410,32 +407,34 @@ async function kodiPing(ep) {
 
 async function sendToTV() {
   var pin = getPin();
-  var ip  = document.getElementById('tv-ip-input').value.trim();
   var url = document.getElementById('tv-url').value.trim();
 
   if (pin.length !== 4) { notice('tv-notice', 'err', 'Enter all 4 digits from your TV screen.'); return; }
-  if (!ip)              { notice('tv-notice', 'err', 'Enter your TV IP address.'); return; }
   if (!url)             { notice('tv-notice', 'err', 'Paste your SharePoint link.'); return; }
 
   var btn = document.getElementById('tv-send-btn');
   btn.disabled = true;
-  btn.innerHTML = '<div class="spinner"></div><span>Connecting to ' + ip + '...</span>';
+  btn.innerHTML = '<div class="spinner"></div><span>Sending to TV...</span>';
 
-  var pluginUrl = 'plugin://' + ADDON_ID + '/?action=setpin&pin=' + pin + '&url=' + encodeURIComponent(url);
-  var ep = 'http://' + ip + ':8080/jsonrpc';
-
+  // Post the URL to ntfy.sh on the PIN-specific topic.
+  // The TV addon is polling this same topic and will pick it up within 3 seconds.
+  var topic = 'kodi-pair-' + pin;
   try {
-    await kodiCall(ep, 'Player.Open', { item: { file: pluginUrl } });
-    notice('tv-notice', 'ok', '\u2713 Sent! Your TV is loading videos now.');
+    var r = await fetch('https://ntfy.sh/' + topic, {
+      method: 'POST',
+      body: url,
+      headers: { 'Content-Type': 'text/plain' }
+    });
+    if (!r.ok) throw new Error('ntfy HTTP ' + r.status);
+    notice('tv-notice', 'ok', '\u2713 Sent! Your TV will load the videos within a few seconds.');
     btn.innerHTML = '\u2713 Done';
     btn.classList.add('success');
   } catch(e) {
     btn.disabled = false;
     btn.innerHTML = '\u25b6 Send to TV';
     notice('tv-notice', 'err',
-      '\u274c Could not reach Kodi at <strong>' + ip + ':8080</strong><br><br>' +
-      'On the TV: Kodi \u2192 Settings \u2192 Services \u2192 Control \u2192 ' +
-      '<strong>"Allow remote control via HTTP"</strong> must be ON.'
+      '\u274c Could not send: ' + e.message + '<br><br>' +
+      'Check your internet connection and try again.'
     );
   }
 }
