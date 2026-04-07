@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<settings>
+  <category label="OneDrive Share">
+    <setting id="share_url" type="text" label="SharePoint / OneDrive share URL" default="" />
+  </category>
+</settings>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kodi Setup</title>
+  <title>OneDrive / SharePoint Kodi Setup</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@700&display=swap" rel="stylesheet">
   <style>
@@ -200,13 +200,13 @@
 
   <div class="header">
     <div class="logo">&#9654;</div>
-    <span class="logo-name">KODI SETUP</span>
+    <span class="logo-name">ONEDRIVE KODI SETUP</span>
   </div>
 
   <!-- LANDING -->
   <div id="view-landing" class="view">
     <h1>What device are you on?</h1>
-    <p class="sub">Pick your setup method and we'll walk you through it.</p>
+    <p class="sub">Stream from a OneDrive or SharePoint share in Kodi. Pick your setup method; the addon talks to <strong>your</strong> proxy (see <code style="font-size:12px;opacity:.85">proxy-server/</code> in this repo) so secrets stay off devices.</p>
 
     <div class="mode-grid">
       <div class="mode-btn" id="mode-tv" onclick="selectMode('tv')">
@@ -273,7 +273,28 @@
 
     <!-- Download -->
     <div class="section" id="sec-download">
-      <p class="sub" style="margin-bottom:16px">Choose the version for your platform. If one doesn't install, try Universal.</p>
+      <div class="notice info" style="margin-bottom:14px">
+        <strong>Recommended (build guide):</strong> run the installer script once &mdash; it drops <code style="font-size:11px">plugin.video.onedriveshare</code> straight into Kodi's addons folder. Set <code style="font-size:11px">PROXY_URL</code> in <code style="font-size:11px">resources/lib/config.py</code> to your Render (or self-hosted) proxy before or after install, then restart Kodi.
+      </div>
+      <p class="field-label" style="margin-bottom:8px">Script installers</p>
+      <div class="dl-grid" style="margin-bottom:16px">
+        <a class="dl-btn" id="dl-ps1" href="https://github.com/ghemed/kodi-setup/raw/main/install_addon.ps1" download>
+          <span class="dl-btn-icon">&#9881;</span>
+          <span class="dl-btn-label">install_addon.ps1</span>
+          <span class="dl-btn-sub">Windows</span>
+        </a>
+        <a class="dl-btn" id="dl-sh" href="https://github.com/ghemed/kodi-setup/raw/main/install_addon.sh" download>
+          <span class="dl-btn-icon">&#128193;</span>
+          <span class="dl-btn-label">install_addon.sh</span>
+          <span class="dl-btn-sub">Linux / macOS</span>
+        </a>
+        <a class="dl-btn" id="dl-proxy" href="https://github.com/ghemed/kodi-setup/tree/main/proxy-server" target="_blank" rel="noopener">
+          <span class="dl-btn-icon">&#9729;</span>
+          <span class="dl-btn-label">Proxy server</span>
+          <span class="dl-btn-sub">Deploy to Render</span>
+        </a>
+      </div>
+      <p class="sub" style="margin-bottom:16px">Zip builds (if you prefer Install from zip). If one doesn't install, try Universal.</p>
       <div class="dl-grid">
         <a class="dl-btn" id="dl-windows" href="https://github.com/ghemed/kodi-setup/raw/main/plugin.video.onedriveshare-windows.zip" download>
           <span class="dl-btn-icon">&#128421;</span>
@@ -292,9 +313,11 @@
         </a>
       </div>
       <div class="install-note">
-        <strong>Windows:</strong> Right-click zip &rarr; Properties &rarr; tick <em>Unblock</em> &rarr; Apply. Then install via Kodi &rarr; Add-ons &rarr; Install from zip.<br><br>
-        <strong>Android:</strong> Download to phone, then in Kodi: Add-ons &rarr; <span class="chip">&#128230;</span> (top-left) &rarr; Install from zip &rarr; Downloads.<br><br>
-        <strong>&#9888; Crashes on first install?</strong> Close Kodi completely and install the zip again &mdash; second install always works.
+        <strong>Script (Windows):</strong> Save <code class="chip">install_addon.ps1</code>, close Kodi, open PowerShell, run: <code class="chip">powershell -ExecutionPolicy Bypass -File .\install_addon.ps1</code><br><br>
+        <strong>Script (Linux / macOS):</strong> <code class="chip">chmod +x install_addon.sh && ./install_addon.sh</code><br><br>
+        <strong>Zip &mdash; Windows:</strong> Right-click zip &rarr; Properties &rarr; tick <em>Unblock</em> &rarr; Apply. Then Kodi &rarr; Add-ons &rarr; Install from zip.<br><br>
+        <strong>Zip &mdash; Android:</strong> Download to device, then Kodi &rarr; Add-ons &rarr; <span class="chip">&#128230;</span> &rarr; Install from zip &rarr; Downloads.<br><br>
+        <strong>&#9888; Crashes on first zip install?</strong> Close Kodi and install the zip again &mdash; second try usually works.
       </div>
     </div>
 
